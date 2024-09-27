@@ -1,5 +1,5 @@
 .home {
-    padding: 60px 60px;
+    padding: 60px;
     min-height: calc(100vh - 200px);
 }
 
@@ -85,5 +85,15 @@
 
     ::placeholder {
         color: $text-placeholders;
+    }
+}
+
+@media (max-width: 768px) {
+    .home {
+        padding: 10px;
+    }
+
+    .home-total_users {
+        display: none;
     }
 }

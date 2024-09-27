@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { User } from "../interfaces";
 import { getUserFollowers, getUserList } from "../services";
-import { Background, UserTable, Input, NotificationManager } from "../components";
+import { Background, UserTable, Input, NotificationManager, GraphBar } from "../components";
 
 export const HomePage = () => {
 
@@ -10,6 +10,7 @@ export const HomePage = () => {
     const [emptyUser, setEmptyUser] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [followersData, setFollowersData] = useState<number[]>([]);
+    const [userNames, setUserNames] = useState<string[]>([]);
 
     const handleSearch = () => {
         if (query.length < 4 || query === 'iseijasunow') {
@@ -23,6 +24,7 @@ export const HomePage = () => {
                 const slicedUsers = users.slice(0, 10);
                 setUsers(slicedUsers);
                 const followersPromises = slicedUsers.map(user => getUserFollowers(user.login));
+                setUserNames(slicedUsers.map(user => user.login));
                 const followersCounts = await Promise.all(followersPromises);
                 setFollowersData(followersCounts);
                 users.length === 0 && setEmptyUser('No user found, try again....');
@@ -56,7 +58,10 @@ export const HomePage = () => {
                 {users.length <= 0 ?
                     <Background emptyUser={emptyUser} />
                     :
-                    <UserTable users={users} />
+                    <>
+                        <UserTable users={users} />
+                        <GraphBar followerData={followersData} userNames={userNames} />
+                    </>
                 }
             </div>
         </>

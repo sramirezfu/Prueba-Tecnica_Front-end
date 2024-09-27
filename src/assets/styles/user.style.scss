@@ -161,4 +161,19 @@
         width: 30px;
         height: 30px;
     }
+
+    .user-table-container {
+        overflow: scroll;
+        max-width: 100%;
+    }
+
+    .profile-user {
+        padding: 10px;
+    }
+
+    .profile-content {
+        max-width: 100%;
+        width: 100%;
+        flex-direction: column-reverse;
+    }
 }
