@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { getUserProfile } from "../services";
 import { UserProfileResponse } from "../interfaces";
-import { Background, UserProfile } from "../components";
+import { Background, NotificationManager, UserProfile } from "../components";
 
 export const UserProfilePage = () => {
 
     const { login } = useParams();
     const [userProfile, setUserProfile] = useState<UserProfileResponse>();
     const [emptyUser, setEmptyUser] = useState('');
-
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (login) {
@@ -18,25 +18,29 @@ export const UserProfilePage = () => {
                 .catch(error => {
                     console.log(error);
                     setEmptyUser('No user found, try again....');
+                    setError('Error getting user info');
                 });
         }
     }, [login]);
+
+    const handleClose = () => {
+        setError(null);
+    };
 
     if (!login) {
         return <Navigate to="/" />
     }
 
     return (
-        <div className="profile-user">
-            {!userProfile ?
-                <>
-                    <h1 className="home-title">User profile</h1>
-                    <h4 className="home-subtitle">Manage your team members and their information here</h4>
+        <>
+            {error && <NotificationManager message={error} onClose={handleClose} />}
+            <div className="profile-user">
+                {!userProfile ?
                     <Background emptyUser={emptyUser} />
-                </>
-                :
-                <UserProfile userProfile={userProfile} />
-            }
-        </div>
+                    :
+                    <UserProfile userProfile={userProfile} />
+                }
+            </div>
+        </>
     )
 }
